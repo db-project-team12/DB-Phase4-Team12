@@ -57,7 +57,7 @@
 
         <div class="signup-link">
             계정이 없으신가요?
-            <a href="<%=request.getContextPath()%>/auth/signup.jsp">회원가입</a>
+            <a href="<%=request.getContextPath()%>/auth/signup">회원가입</a>
         </div>
     </form>
 
