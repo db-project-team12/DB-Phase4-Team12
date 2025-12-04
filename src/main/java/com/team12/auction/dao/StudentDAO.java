@@ -86,8 +86,8 @@ public class StudentDAO {
      */
     public int signUp(Student s) throws SQLException {
         String sql = "INSERT INTO Student " +
-                "(student_id, name, department, grade, password) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                "(student_id, name, department, grade, password, max_credits, max_point) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -101,6 +101,8 @@ public class StudentDAO {
             pstmt.setString(3, s.getDepartment());
             pstmt.setInt(4, s.getGrade());
             pstmt.setString(5, s.getPassword());
+            pstmt.setInt(6, s.getMaxCredits());
+            pstmt.setInt(7, s.getMaxPoint());
 
             result = pstmt.executeUpdate();
 
@@ -115,6 +117,7 @@ public class StudentDAO {
 
         return result;
     }
+
 
     /**
      * 학번으로 학생 조회
