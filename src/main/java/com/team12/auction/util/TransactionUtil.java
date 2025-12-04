@@ -1,4 +1,4 @@
-package team12.auction.util;
+package com.team12.auction.util;
 
 public class TransactionUtil {
 
