@@ -115,8 +115,8 @@ public class SignupServlet extends HttpServlet {
 
             if (result > 0) {
                 // 회원가입 성공: 로그인 페이지로 리다이렉트
-                request.setAttribute("successMessage", "회원가입이 완료되었습니다. 로그인해주세요.");
-                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+            	request.getSession().setAttribute("successMessage", "회원가입이 완료되었습니다. 로그인해주세요.");
+            	response.sendRedirect(request.getContextPath() + "/auth/login");
             } else {
                 // 회원가입 실패
                 request.setAttribute("errorMessage", "회원가입에 실패했습니다. 다시 시도해주세요.");
