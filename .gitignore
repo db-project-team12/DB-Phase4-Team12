@@ -10,7 +10,7 @@
 .metadata
 #.classpath
 #.project
-.settings/
+#.settings/
 local.properties
 .loadpath
 .recommenders
