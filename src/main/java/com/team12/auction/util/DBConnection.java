@@ -6,15 +6,10 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DBConnection {
-<<<<<<< HEAD
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521/orclpdb";
-    private static final String USER = "university";
-    private static final String PASSWORD = "comp322";
-=======
+
     private static final String DEFAULT_URL = "jdbc:oracle:thin:@localhost:1521:orcl";
     private static final String DEFAULT_USER = "course_registration";
     private static final String DEFAULT_PASSWORD = "oracle";
->>>>>>> origin/main
 
     private static String URL = DEFAULT_URL;
     private static String USER = DEFAULT_USER;
