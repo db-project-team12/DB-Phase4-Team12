@@ -27,7 +27,7 @@
 <body>
 <div class="header">
     <h1>내 정보</h1>
-    <a href="<%=request.getContextPath()%>/main.jsp" class="btn-secondary">메인으로</a>
+    <a href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
 </div>
 
 <%
@@ -76,8 +76,8 @@
         </div>
 
         <div class="action-buttons">
-            <a href="<%=request.getContextPath()%>/editProfile" class="btn btn-primary">내 정보 수정</a>
-            <a href="<%=request.getContextPath()%>/auth/changePassword" class="btn btn-warning">비밀번호 변경</a>
+            <a href="<%=request.getContextPath()%>/editProfile" class="logout-btn">내 정보 수정</a>
+            <a href="<%=request.getContextPath()%>/auth/changePassword" class="btn-warning">비밀번호 변경</a>
         </div>
     </div>
 

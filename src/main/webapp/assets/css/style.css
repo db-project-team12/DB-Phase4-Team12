@@ -412,9 +412,7 @@ body {
     color: #721c24;
     word-wrap: break-word;
 }
-	color: #666;
-	font-size: 14px;
-}
+
 /* ========== 공통 버튼 ========== */
 .btn-primary, .btn-secondary, .btn-disabled {
 	display: inline-block;

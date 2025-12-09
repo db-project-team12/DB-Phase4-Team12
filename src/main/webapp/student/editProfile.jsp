@@ -22,8 +22,8 @@
 <div class="header">
     <h1>내 정보 수정</h1>
     <div>
-        <a href="<%=request.getContextPath()%>/mypage" class="btn-secondary">내 정보</a>
-        <a href="<%=request.getContextPath()%>/main.jsp" class="btn-secondary">메인으로</a>
+        <a href="<%=request.getContextPath()%>/mypage" class="logout-btn">내 정보</a>
+        <a href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
     </div>
 </div>
 

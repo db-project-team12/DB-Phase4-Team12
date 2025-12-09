@@ -22,8 +22,8 @@
 <div class="header">
     <h1>비밀번호 변경</h1>
     <div>
-        <a href="mypage" class="btn-secondary">내 정보</a>
-        <a href="main.jsp" class="btn-secondary">메인으로</a>
+        <a href="<%=request.getContextPath()%>/mypage" class="logout-btn">내 정보</a>
+        <a href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
     </div>
 </div>
 
@@ -71,8 +71,8 @@
             </div>
 
             <div class="button-group">
-                <button type="submit" class="btn btn-primary">변경</button>
-                <a href="<%=request.getContextPath()%>/mypage" class="btn btn-secondary">취소</a>
+                <button type="submit" class="btn btn-login">변경</button>
+                <a href="<%=request.getContextPath()%>/mypage" class="btn logout-btn">취소</a>
             </div>
         </form>
     </div>
