@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(urlPatterns = { "/auction/bid", "/auction/bid/*" })
+@WebServlet("/auction/bid")
 public class AuctionBidServlet extends HttpServlet {
 
         private AuctionDAO auctionDAO;
@@ -45,7 +45,7 @@ public class AuctionBidServlet extends HttpServlet {
                 }
 
                 int studentId = (Integer) session.getAttribute("studentId");
-                String auctionId = extractAuctionId(request);
+                String auctionId = request.getParameter("auctionId");
 
                 renderBidPage(request, response, studentId, auctionId);
         }
@@ -62,7 +62,7 @@ public class AuctionBidServlet extends HttpServlet {
                 }
 
                 int studentId = (Integer) session.getAttribute("studentId");
-                String auctionId = extractAuctionId(request);
+                String auctionId = request.getParameter("auctionId");
                 String bidAmountStr = request.getParameter("bidAmount");
 
                 if (auctionId == null || auctionId.trim().isEmpty()) {
@@ -195,19 +195,5 @@ public class AuctionBidServlet extends HttpServlet {
                 LocalDate end = auction.getEndTime().toLocalDate();
 
                 return !today.isBefore(start) && !today.isAfter(end);
-        }
-
-        private String extractAuctionId(HttpServletRequest request) {
-                String auctionId = request.getParameter("auctionId");
-
-                if ((auctionId == null || auctionId.isEmpty()) && request.getPathInfo() != null) {
-                        String pathInfo = request.getPathInfo();
-                        if (pathInfo.startsWith("/")) {
-                                pathInfo = pathInfo.substring(1);
-                        }
-                        auctionId = pathInfo;
-                }
-
-                return auctionId;
         }
 }
