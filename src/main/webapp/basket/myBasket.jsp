@@ -7,7 +7,6 @@
 <%
     request.setCharacterEncoding("UTF-8");
     String studentName = (String) session.getAttribute("studentName");
-    int studentId = (Integer) session.getAttribute("studentId");
 
     String successMessage = (String) session.getAttribute("successMessage");
     String errorMessage = (String) session.getAttribute("errorMessage");
