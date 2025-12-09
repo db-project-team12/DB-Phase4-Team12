@@ -47,7 +47,7 @@
             <div class="error-message"><%= errorMessage %></div>
         <% } %>
 
-        <form class="page-actions" method="get" action="<%=request.getRequestURI()%>">
+        <form class="page-actions" method="get" action="<%=request.getContextPath()%>/section/list">
             <div class="filters">
                 <input type="text" name="keyword" placeholder="강의명, 교수명 검색" value="<%= keyword != null ? keyword : "" %>">
                 <input type="text" name="department" placeholder="학과 입력" value="<%= department != null ? department : "" %>">
