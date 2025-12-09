@@ -14,7 +14,7 @@ public class StudentDAO {
      */
     public Student login(int studentId, String password) throws SQLException {
         String sql = "SELECT student_id, name, department, grade, password, max_credits, max_point " +
-                "FROM Student WHERE student_id = ? AND password = ?";
+            "FROM Student WHERE student_id = ? AND password = ?";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -40,8 +40,6 @@ public class StudentDAO {
                 student.setMaxPoint(rs.getInt(7));
             }
 
-        } catch (SQLException e) {
-            throw e;
         } finally {
             DBConnection.close(rs, pstmt, conn);
         }
@@ -72,8 +70,6 @@ public class StudentDAO {
                 exists = count > 0;
             }
 
-        } catch (SQLException e) {
-            throw e;
         } finally {
             DBConnection.close(rs, pstmt, conn);
         }
@@ -86,8 +82,8 @@ public class StudentDAO {
      */
     public int signUp(Student s) throws SQLException {
         String sql = "INSERT INTO Student " +
-                "(student_id, name, department, grade, password, max_credits, max_point) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "(student_id, name, department, grade, password, max_credits, max_point) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -124,7 +120,7 @@ public class StudentDAO {
      */
     public Student selectById(int studentId) throws SQLException {
         String sql = "SELECT name, department, grade, password, max_credits, max_point " +
-                "FROM Student WHERE student_id = ?";
+            "FROM Student WHERE student_id = ?";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -149,12 +145,73 @@ public class StudentDAO {
                 student.setMaxPoint(rs.getInt(6));
             }
 
-        } catch (SQLException e) {
-            throw e;
         } finally {
             DBConnection.close(rs, pstmt, conn);
         }
 
         return student;
+    }
+
+    /**
+     * 현재 학점 조회
+     */
+    public int getCurrentCredits(int studentId) throws SQLException {
+        String sql = "SELECT NVL(SUM(c.credits), 0) as total_credits " +
+            "FROM Enrollment e " +
+            "JOIN Section s ON e.section_id = s.section_id " +
+            "JOIN Course c ON s.course_id = c.course_id " +
+            "WHERE e.student_id = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int credits = 0;
+
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, studentId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                credits = rs.getInt(1);
+            }
+        } finally {
+            DBConnection.close(rs, pstmt, conn);
+        }
+
+        return credits;
+    }
+
+    /**
+     * 현재 포인트 조회
+     */
+    public int getCurrentPoints(int studentId) throws SQLException {
+        String sql = "SELECT s.max_point - NVL(SUM(e.points_used), 0) as current_points " +
+            "FROM Student s " +
+            "LEFT JOIN Enrollment e ON s.student_id = e.student_id " +
+            "WHERE s.student_id = ? " +
+            "GROUP BY s.max_point";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int points = 0;
+
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, studentId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                points = rs.getInt(1);
+            }
+        } finally {
+            DBConnection.close(rs, pstmt, conn);
+        }
+        return points;
     }
 }

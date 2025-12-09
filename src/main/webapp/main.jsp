@@ -17,6 +17,7 @@
         <h1>수강신청 경매 시스템</h1>
         <div class="user-info">
             <span><strong><%= studentName %></strong>님 환영합니다!</span>
+            <a href="<%=request.getContextPath()%>/mypage" class="logout-btn">내 정보</a>
             <a href="<%=request.getContextPath()%>/auth/logout" class="logout-btn">로그아웃</a>
         </div>
     </div>
