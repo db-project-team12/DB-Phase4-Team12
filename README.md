@@ -197,7 +197,7 @@ copy C:\Users\사용자명\Downloads\ojdbc11.jar lib\
 1. `course_registration` 계정으로 접속
 2. 테이블 생성 및 데이터 생성:
    ```bash
-   sqlplus course_registration/oracle@localhost:1521/orclpdb
+   sqlplus course_registration/oracle@localhost:1521/orcl
 
    SQL> @create_schema.sql
    SQL> @insert_data.sql
