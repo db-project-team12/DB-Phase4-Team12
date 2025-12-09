@@ -59,12 +59,7 @@
         <form class="page-actions" method="get" action="<%=request.getRequestURI()%>">
             <div class="filters">
                 <input type="text" name="keyword" placeholder="강의명, 교수명 검색" value="<%= keyword != null ? keyword : "" %>">
-                <select name="department">
-                    <option value="" <%= (department == null || department.isEmpty()) ? "selected" : "" %>>학과 전체</option>
-                    <option value="컴퓨터공학과" <%= "컴퓨터공학과".equals(department) ? "selected" : "" %>>컴퓨터공학과</option>
-                    <option value="경영학과" <%= "경영학과".equals(department) ? "selected" : "" %>>경영학과</option>
-                    <option value="경제학과" <%= "경제학과".equals(department) ? "selected" : "" %>>경제학과</option>
-                </select>
+                <input type="text" name="department" placeholder="학과 입력" value="<%= department != null ? department : "" %>">
                 <button class="btn-primary" type="submit">검색</button>
             </div>
             <a href="<%=request.getContextPath()%>/basket/myBasket.jsp" class="btn-secondary">수강꾸러미 보기</a>

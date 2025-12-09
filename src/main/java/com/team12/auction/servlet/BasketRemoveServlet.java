@@ -39,8 +39,8 @@ public class BasketRemoveServlet extends HttpServlet {
         BasketDAO basketDAO = new BasketDAO();
 
         try {
-            String basketId = basketDAO.getBasketId(studentId);
-            int deleted = basketDAO.deleteSectionFromBasket(basketId, sectionId);
+            basketDAO.ensureBasketExists(studentId);
+            int deleted = basketDAO.deleteSectionFromBasket(studentId, sectionId);
             if (deleted > 0) {
                 session.setAttribute("successMessage", "수강꾸러미에서 분반을 삭제했습니다.");
             } else {

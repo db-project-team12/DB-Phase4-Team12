@@ -170,8 +170,8 @@ public class SectionDAO {
         }
 
         if (department != null && !department.trim().isEmpty()) {
-            sql.append("AND c.department = ? ");
-            params.add(department.trim());
+            sql.append("AND LOWER(c.department) LIKE ? ");
+            params.add("%" + department.trim().toLowerCase() + "%");
         }
 
         sql.append("ORDER BY c.course_id, s.section_number");
