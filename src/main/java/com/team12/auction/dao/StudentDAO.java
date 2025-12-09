@@ -243,4 +243,36 @@ public class StudentDAO {
             DBConnection.close(pstmt, conn);
         }
     }
+
+    public boolean validateLogin(int studentId, String password) throws SQLException {
+        String sql = "SELECT student_id " +
+            "FROM Student " +
+            "WHERE student_id = ? AND password = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();
+        }
+    }
+
+
+    public boolean changePassword(int studentId, String newPassword) throws SQLException {
+        String sql = "UPDATE Student SET password = ? WHERE student_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newPassword);
+            pstmt.setInt(2, studentId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
 }

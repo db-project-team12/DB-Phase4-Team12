@@ -33,7 +33,7 @@ public class MyPageServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("studentId") == null) {
-            response.sendRedirect("/auth/login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
@@ -43,7 +43,7 @@ public class MyPageServlet extends HttpServlet {
             // Get student information
             Student student = studentDAO.selectById(studentId);
             if (student == null) {
-                response.sendRedirect("/auth/login");
+                response.sendRedirect(request.getContextPath() + "/auth/login");
                 return;
             }
 

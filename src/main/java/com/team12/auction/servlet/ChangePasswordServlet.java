@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@WebServlet("/editProfile")
-public class EditProfileServlet extends HttpServlet {
+@WebServlet("/auth/changePassword")
+public class ChangePasswordServlet extends HttpServlet {
     private StudentDAO studentDAO;
     private LogDAO logDAO;
 
@@ -38,23 +38,7 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        Integer studentId = (Integer) session.getAttribute("studentId");
-
-        try {
-            Student student = studentDAO.selectById(studentId);
-            if (student == null) {
-                response.sendRedirect(request.getContextPath() + "/auth/login");
-                return;
-            }
-
-            request.setAttribute("student", student);
-            request.getRequestDispatcher("/student/editProfile.jsp").forward(request, response);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "정보를 불러오는 중 오류가 발생했습니다.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
-        }
+        request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
     }
 
     @Override
@@ -79,59 +63,66 @@ public class EditProfileServlet extends HttpServlet {
             }
 
             // Get form data
-            String name = request.getParameter("name");
-            String department = request.getParameter("department");
-            String gradeStr = request.getParameter("grade");
+            String currentPassword = request.getParameter("currentPassword");
+            String newPassword = request.getParameter("newPassword");
+            String confirmPassword = request.getParameter("confirmPassword");
 
             // Validate input
-            if (name == null || name.trim().isEmpty() ||
-                department == null || department.trim().isEmpty() ||
-                gradeStr == null || gradeStr.trim().isEmpty()) {
+            if (currentPassword == null || currentPassword.trim().isEmpty() ||
+                newPassword == null || newPassword.trim().isEmpty() ||
+                confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
                 request.setAttribute("errorMessage", "모든 필드를 입력해주세요.");
-                request.setAttribute("student", student);
-                request.getRequestDispatcher("/student/editProfile.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
                 return;
             }
 
-            int grade;
-            try {
-                grade = Integer.parseInt(gradeStr);
-                if (grade < 1 || grade > 4) {
-                    throw new NumberFormatException();
-                }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "학년은 1~4 사이의 숫자여야 합니다.");
-                request.setAttribute("student", student);
-                request.getRequestDispatcher("/student/editProfile.jsp").forward(request, response);
+            // Verify current password
+            boolean verifyStudent = studentDAO.validateLogin(studentId, currentPassword);
+            if (!verifyStudent) {
+                request.setAttribute("errorMessage", "현재 비밀번호가 일치하지 않습니다.");
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
                 return;
             }
 
-            // Update student info
-            student.setName(name);
-            student.setDepartment(department);
-            student.setGrade(grade);
+            // Check if new passwords match
+            if (!newPassword.equals(confirmPassword)) {
+                request.setAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
+                return;
+            }
 
-            boolean success = studentDAO.updateStudent(student);
+            // Check if new password is different from current
+            if (currentPassword.equals(newPassword)) {
+                request.setAttribute("errorMessage", "새 비밀번호는 현재 비밀번호와 달라야 합니다.");
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
+                return;
+            }
+
+            // Password strength check (optional)
+            if (newPassword.length() < 4) {
+                request.setAttribute("errorMessage", "비밀번호는 최소 4자 이상이어야 합니다.");
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
+                return;
+            }
+
+            // Update password
+            boolean success = studentDAO.changePassword(studentId, newPassword);
 
             if (success) {
-                // Update session name
-                session.setAttribute("studentName", name);
-
                 // Log the action
                 Log log = new Log();
-                log.setActionType("PROFILE_UPDATE");
-                log.setDetails("프로필 정보 수정");
+                log.setActionType("PASSWORD_CHANGE");
+                log.setDetails("비밀번호 변경");
                 log.setStudentId(studentId);
                 log.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
                 logDAO.insertLog(log);
 
-                session.setAttribute("successMessage", "프로필 업데이트에 성공했습니다.");
+                session.setAttribute("successMessage", "비밀번호 변경에 성공했습니다.");
                 response.sendRedirect(request.getContextPath() + "/mypage");
             } else {
-                request.setAttribute("errorMessage", "정보 수정에 실패했습니다.");
-                request.setAttribute("student", student);
-                request.getRequestDispatcher("/student/editProfile.jsp").forward(request, response);
+                request.setAttribute("errorMessage", "비밀번호 변경에 실패했습니다.");
+                request.getRequestDispatcher("/auth/changePassword.jsp").forward(request, response);
             }
 
         } catch (SQLException e) {

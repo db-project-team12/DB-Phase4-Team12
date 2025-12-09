@@ -3,7 +3,7 @@
 <%@ include file="/auth/loginCheck.jsp" %>
 <%
     Student student = (Student) request.getAttribute("student");
-    String error = (String) request.getAttribute("error");
+    String error = (String) request.getAttribute("errorMessage");
 
     if (student == null) {
         response.sendRedirect("/auth/login");
