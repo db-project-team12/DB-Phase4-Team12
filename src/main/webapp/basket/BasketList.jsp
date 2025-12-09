@@ -1,32 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="com.team12.auction.dao.BasketDAO" %>
 <%@ page import="com.team12.auction.model.dto.BasketItemDetail" %>
 <%@ include file="/auth/loginCheck.jsp" %>
 <%
-    request.setCharacterEncoding("UTF-8");
     String studentName = (String) session.getAttribute("studentName");
 
-    String successMessage = (String) session.getAttribute("successMessage");
-    String errorMessage = (String) session.getAttribute("errorMessage");
-    if (successMessage != null) session.removeAttribute("successMessage");
-    if (errorMessage != null) session.removeAttribute("errorMessage");
-
-    BasketDAO basketDAO = new BasketDAO();
-    List<BasketItemDetail> basketItems = new ArrayList<>();
-    try {
-        basketDAO.ensureBasketExists(studentId);
-        basketItems = basketDAO.getMyBasket(studentId);
-    } catch (SQLException e) {
-        e.printStackTrace();
-        errorMessage = "수강꾸러미 정보를 불러오는 중 오류가 발생했습니다.";
+    @SuppressWarnings("unchecked")
+    List<BasketItemDetail> basketItems =
+            (List<BasketItemDetail>) request.getAttribute("basketItems");
+    if (basketItems == null) {
+        basketItems = new ArrayList<>();
     }
 
-    int totalCredits = 0;
-    for (BasketItemDetail item : basketItems) {
-        totalCredits += item.getCredits();
-    }
+    Integer totalCreditsObj = (Integer) request.getAttribute("totalCredits");
+    int totalCredits = (totalCreditsObj != null) ? totalCreditsObj : 0;
+
+    Integer maxCreditsObj = (Integer) request.getAttribute("maxCredits");
+    int maxCredits = (maxCreditsObj != null) ? maxCreditsObj : 0;
+
+    String successMessage = (String) request.getAttribute("successMessage");
+    String errorMessage = (String) request.getAttribute("errorMessage");
 
     String currentUrl = request.getRequestURI();
 %>
@@ -44,7 +37,8 @@
         <h1>수강꾸러미</h1>
         <div class="user-info">
             <span><strong><%= studentName %></strong>님</span>
-            <a href="<%=request.getContextPath()%>/section/sectionList.jsp" class="logout-btn">강의조회</a>
+            
+            <a href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
             <a href="<%=request.getContextPath()%>/auth/logout" class="logout-btn">로그아웃</a>
         </div>
     </div>
@@ -58,12 +52,19 @@
         <% } %>
 
         <div class="page-actions">
-            <div>
-                <p class="summary-text">현재 담긴 강의: <strong><%= basketItems.size() %>과목</strong> / 총 학점: <strong><%= totalCredits %>학점</strong></p>
-            </div>
-            <div class="action-buttons">
-                <a href="<%=request.getContextPath()%>/auction/auctionList.jsp" class="btn-primary">경매로 이동</a>
-                <a href="<%=request.getContextPath()%>/main.jsp" class="btn-secondary">메인으로</a>
+			<div>
+				<p class="summary-text">
+					현재 담긴 강의 수: <strong><%=basketItems.size()%>과목</strong> 
+					( 
+					<strong><%=totalCredits%></strong>
+					/ 
+					<strong><%=maxCredits%></strong> 학점 
+					)
+				</p>
+			</div>
+				<div class="action-buttons">
+            	<a href="<%=request.getContextPath()%>/section/list" class="btn-secondary">강의 조회</a>
+                <a href="<%=request.getContextPath()%>/auction/auctionList.jsp" class="btn-secondary">경매 조회</a>
             </div>
         </div>
 

@@ -1,33 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="com.team12.auction.dao.SectionDAO" %>
 <%@ page import="com.team12.auction.model.dto.SectionSearchResult" %>
 <%@ include file="/auth/loginCheck.jsp" %>
 <%
     request.setCharacterEncoding("UTF-8");
     String studentName = (String) session.getAttribute("studentName");
-    String keyword = request.getParameter("keyword");
-    String department = request.getParameter("department");
+
+    @SuppressWarnings("unchecked")
+    List<SectionSearchResult> sections =
+            (List<SectionSearchResult>) request.getAttribute("sections");
+    if (sections == null) {
+        sections = new ArrayList<>();
+    }
+
+    String keyword = (String) request.getAttribute("keyword");
+    String department = (String) request.getAttribute("department");
 
     String successMessage = (String) session.getAttribute("successMessage");
-    String errorMessage = (String) session.getAttribute("errorMessage");
+    String errorMessage = (String) request.getAttribute("errorMessage");
     if (successMessage != null) session.removeAttribute("successMessage");
-    if (errorMessage != null) session.removeAttribute("errorMessage");
-
-    List<SectionSearchResult> sections = new ArrayList<>();
-    try {
-        SectionDAO sectionDAO = new SectionDAO();
-        sections = sectionDAO.searchSections(keyword, department);
-    } catch (SQLException e) {
-        e.printStackTrace();
-        errorMessage = "강의 목록을 불러오는 중 오류가 발생했습니다.";
-    }
-
-    String currentUrl = request.getRequestURI();
-    if (request.getQueryString() != null) {
-        currentUrl += "?" + request.getQueryString();
-    }
 %>
 <!DOCTYPE html>
 <html>
@@ -62,7 +53,7 @@
                 <input type="text" name="department" placeholder="학과 입력" value="<%= department != null ? department : "" %>">
                 <button class="btn-primary" type="submit">검색</button>
             </div>
-            <a href="<%=request.getContextPath()%>/basket/myBasket.jsp" class="btn-secondary">수강꾸러미 보기</a>
+            <a href="<%=request.getContextPath()%>/basket/list" class="btn-secondary">수강꾸러미 보기</a>
         </form>
 
         <table class="data-table">
@@ -102,11 +93,12 @@
                         <td>
                             <form method="post" action="<%=request.getContextPath()%>/basket/add" class="inline-form">
                                 <input type="hidden" name="sectionId" value="<%= item.getSectionId() %>">
-                                <input type="hidden" name="returnUrl" value="<%= currentUrl %>">
-                                <button class="<%= item.getRemainingSeats() > 0 ? "btn-primary" : "btn-disabled" %>" type="submit" <%= item.getRemainingSeats() == 0 ? "disabled" : "" %>>
-                                    <%= item.getRemainingSeats() == 0 ? "마감" : "담기" %>
-                                </button>
-                            </form>
+                                <input type="hidden" name="returnUrl" value="<%= request.getRequestURI() %>">
+								<button class="btn-secondary" type="submit"
+									<%=item.getRemainingSeats() == 0 ? "disabled" : ""%>>
+									<%=item.getRemainingSeats() == 0 ? "마감" : "담기"%>
+								</button>
+							</form>
                         </td>
                     </tr>
                 <% } %>

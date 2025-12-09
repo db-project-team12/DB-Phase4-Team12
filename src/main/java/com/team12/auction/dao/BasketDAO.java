@@ -14,66 +14,49 @@ public class BasketDAO {
     /**
      * 학생의 장바구니가 없으면 생성 (basket_id = 'B' + studentId)
      */
-    public void ensureBasketExists(int studentId) throws SQLException {
-        String desiredBasketId = "B" + studentId;
+	public void ensureBasketExists(int studentId) throws SQLException {
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+	    try {
+	        conn = DBConnection.getConnection();
 
-        try {
-            conn = DBConnection.getConnection();
+	        // 1. 이 학생의 장바구니가 이미 있는지 확인
+	        String selectSql = "SELECT basket_id FROM Basket WHERE student_id = ?";
+	        pstmt = conn.prepareStatement(selectSql);
+	        pstmt.setInt(1, studentId);
+	        rs = pstmt.executeQuery();
 
-            // 1. 학생에게 이미 존재하는 장바구니 확인
-            String selectSql = "SELECT basket_id FROM Basket WHERE student_id = ?";
-            pstmt = conn.prepareStatement(selectSql);
-            pstmt.setInt(1, studentId);
-            rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            // 이미 장바구니가 있으면, 기존 basket_id 는 그대로 두고 바로 종료
+	            return;
+	        }
+	        rs.close();
+	        pstmt.close();
 
-            if (rs.next()) {
-                String existingId = rs.getString(1);
-                rs.close();
-                pstmt.close();
+	        // 2. 장바구니가 없다면 새로 생성
+	        String studentIdStr = String.valueOf(studentId); // 예: 2025111482
+	        if (studentIdStr.length() > 9) {
+	            studentIdStr = studentIdStr.substring(0, 9); // 앞 9자리만 사용 -> 202511148
+	        }
+	        String newBasketId = "B" + studentIdStr; // -> B202511148
 
-                // 기존 basket_id가 기대 형식이 아니면 B접두어로 업데이트
-                if (existingId != null && !existingId.equals(desiredBasketId)) {
-                    String updateItems = "UPDATE BasketItem SET basket_id = ? WHERE basket_id = ?";
-                    pstmt = conn.prepareStatement(updateItems);
-                    pstmt.setString(1, desiredBasketId);
-                    pstmt.setString(2, existingId);
-                    pstmt.executeUpdate();
-                    pstmt.close();
+	        String insertSql = "INSERT INTO Basket (basket_id, student_id) VALUES (?, ?)";
+	        pstmt = conn.prepareStatement(insertSql);
+	        pstmt.setString(1, newBasketId);
+	        pstmt.setInt(2, studentId);
+	        pstmt.executeUpdate();
 
-                    String updateBasket = "UPDATE Basket SET basket_id = ? WHERE student_id = ?";
-                    pstmt = conn.prepareStatement(updateBasket);
-                    pstmt.setString(1, desiredBasketId);
-                    pstmt.setInt(2, studentId);
-                    pstmt.executeUpdate();
-                    pstmt.close();
+	        DBConnection.commit(conn);
 
-                    DBConnection.commit(conn);
-                }
-                return; // 이미 있으면 종료
-            }
-            rs.close();
-            pstmt.close();
-
-            // 2. 없으면 새로 생성
-            String insertSql = "INSERT INTO Basket (basket_id, student_id) VALUES (?, ?)";
-            pstmt = conn.prepareStatement(insertSql);
-            pstmt.setString(1, desiredBasketId);
-            pstmt.setInt(2, studentId);
-            pstmt.executeUpdate();
-
-            DBConnection.commit(conn);
-
-        } catch (SQLException e) {
-            DBConnection.rollback(conn);
-            throw e;
-        } finally {
-            DBConnection.close(rs, pstmt, conn);
-        }
-    }
+	    } catch (SQLException e) {
+	        DBConnection.rollback(conn);
+	        throw e;
+	    } finally {
+	        DBConnection.close(rs, pstmt, conn);
+	    }
+	}
 
     /**
      * 해당 분반이 이미 장바구니에 있는지 확인
@@ -142,7 +125,7 @@ public class BasketDAO {
             pstmt.close();
 
             // 2. 정원 확인 및 등록 처리
-            success = processCapacityAndMaybeEnroll(conn, studentId, basketId, sectionId);
+            //success = processCapacityAndMaybeEnroll(conn, studentId, basketId, sectionId);
 
             DBConnection.commit(conn);
 
@@ -375,12 +358,12 @@ public class BasketDAO {
             deletedItems = pstmt.executeUpdate();
             pstmt.close();
 
-            String deleteEnrollmentSql = "DELETE FROM Enrollment WHERE student_id = ? AND section_id = ?";
-            pstmt = conn.prepareStatement(deleteEnrollmentSql);
-            pstmt.setInt(1, studentId);
-            pstmt.setString(2, sectionId);
-            pstmt.executeUpdate();
-            pstmt.close();
+//            String deleteEnrollmentSql = "DELETE FROM Enrollment WHERE student_id = ? AND section_id = ?";
+//            pstmt = conn.prepareStatement(deleteEnrollmentSql);
+//            pstmt.setInt(1, studentId);
+//            pstmt.setString(2, sectionId);
+//            pstmt.executeUpdate();
+//            pstmt.close();
 
             DBConnection.commit(conn);
 
