@@ -14,14 +14,15 @@
 	href="<%=request.getContextPath()%>/assets/css/style.css">
 </head>
 <body class="main-page">
-	<div class="container">
-		<div class="header">
-			<h1>수강신청 경매 시스템</h1>
-			<div class="user-info">
-				<span><strong><%= studentName %></strong>님 환영합니다!</span> <a
-					href="<%=request.getContextPath()%>/auth/logout" class="logout-btn">로그아웃</a>
-			</div>
-		</div>
+<div class="container">
+    <div class="header">
+        <h1>수강신청 경매 시스템</h1>
+        <div class="user-info">
+            <span><strong><%= studentName %></strong>님 환영합니다!</span>
+            <a href="<%=request.getContextPath()%>/mypage" class="logout-btn">내 정보</a>
+            <a href="<%=request.getContextPath()%>/auth/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
 
 		<div class="content">
 			<div class="welcome-message">
@@ -42,11 +43,11 @@
                                         class="menu-card">
                                         <h3>경매</h3>
                                         <p>경매를 관리하세요</p>
-				</a> <a href="<%=request.getContextPath()%>/enrollment/myEnrollment.jsp"
-					class="menu-card">
-					<h3>등록 조회</h3>
-					<p>내가 수강중인 강의들을 확인하세요</p>
-				</a>
+                                </a> <a href="<%=request.getContextPath()%>/enrollment/my"
+                                        class="menu-card">
+                                        <h3>등록 조회</h3>
+                                        <p>내가 수강중인 강의들을 확인하세요</p>
+                                </a>
 			</div>
 		</div>
         </div>
