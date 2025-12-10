@@ -15,7 +15,6 @@
     }
 
     String errorMessage = (String) request.getAttribute("errorMessage");
-    String successMessage = (String) request.getAttribute("successMessage");
 %>
 <!DOCTYPE html>
 <html>
@@ -29,7 +28,7 @@
 <body class="main-page">
         <div class="container">
                 <div class="header">
-                        <h1>나의 등록 목록</h1>
+                        <h1>나의 등록</h1>
                         <div class="user-info">
                                 <span><strong><%= studentName %></strong>님</span> <a
                                         href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
@@ -38,18 +37,14 @@
                 </div>
 
                 <div class="content">
-                        <% if (successMessage != null) { %>
-                        <div class="success-message"><%= successMessage %></div>
-                        <% } %>
-
                         <% if (errorMessage != null) { %>
                         <div class="error-message"><%= errorMessage %></div>
                         <% } %>
 
                         <div class="page-actions">
                                 <div>
-                                <p class="summary-text">
-                                                현재 등록된 총 건수: <strong><%= enrollments.size() %>건</strong>
+                                        <p class="summary-text">
+                                                현재 등록된 강의 수: <strong><%= enrollments.size() %>과목</strong>
                                         </p>
                                 </div>
                                 <div class="action-buttons">
@@ -68,8 +63,8 @@
                                                 <th>교수</th>
                                                 <th>강의실</th>
                                                 <th>정원</th>
+                                                <th>신청 경로</th>
                                                 <th>사용 포인트</th>
-                                                <th>관리</th>
                                         </tr>
                                 </thead>
                                 <tbody>
@@ -87,16 +82,8 @@
                                                 <td><%= enrollment.getProfessor() %></td>
                                                 <td><%= enrollment.getClassroom() %></td>
                                                 <td><%= enrollment.getCapacity() %>명</td>
+                                                <td><%= enrollment.getEnrollmentSource() %></td>
                                                 <td><%= enrollment.getPointsUsed() %>점</td>
-                                                <td>
-                                                        <form method="post"
-                                                                action="<%=request.getContextPath()%>/enrollment/cancel"
-                                                                onsubmit="return confirm('해당 수강 신청을 취소하시겠습니까?');">
-                                                                <input type="hidden" name="sectionId"
-                                                                        value="<%= enrollment.getSectionId() %>">
-                                                                <button type="submit" class="btn-secondary">취소</button>
-                                                        </form>
-                                                </td>
                                         </tr>
                                         <% } %>
                                         <% } %>
