@@ -36,8 +36,9 @@ public class EnrollmentListServlet extends HttpServlet {
                         return;
                 }
 
+                int studentId = (Integer) session.getAttribute("studentId");
+
                 try {
-                        int studentId = (Integer) session.getAttribute("studentId");
                         List<EnrollmentDetail> enrollments = enrollmentDAO.getMyEnrollment(studentId);
                         request.setAttribute("enrollments", enrollments);
                 } catch (SQLException e) {

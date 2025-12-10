@@ -28,7 +28,7 @@
 <body class="main-page">
         <div class="container">
                 <div class="header">
-                        <h1>나의 등록 목록</h1>
+                        <h1>나의 등록</h1>
                         <div class="user-info">
                                 <span><strong><%= studentName %></strong>님</span> <a
                                         href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
@@ -43,8 +43,8 @@
 
                         <div class="page-actions">
                                 <div>
-                                <p class="summary-text">
-                                                현재 등록된 총 건수: <strong><%= enrollments.size() %>건</strong>
+                                        <p class="summary-text">
+                                                현재 등록된 강의 수: <strong><%= enrollments.size() %>과목</strong>
                                         </p>
                                 </div>
                                 <div class="action-buttons">
