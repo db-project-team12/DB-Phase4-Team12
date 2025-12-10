@@ -21,14 +21,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>전체 등록 - 수강신청 경매 시스템</title>
+<title>나의 등록 - 수강신청 경매 시스템</title>
 <link rel="stylesheet"
         href="<%=request.getContextPath()%>/assets/css/style.css">
 </head>
 <body class="main-page">
         <div class="container">
                 <div class="header">
-                        <h1>전체 등록 목록</h1>
+                        <h1>나의 등록</h1>
                         <div class="user-info">
                                 <span><strong><%= studentName %></strong>님</span> <a
                                         href="<%=request.getContextPath()%>/main.jsp" class="logout-btn">메인으로</a>
@@ -43,8 +43,8 @@
 
                         <div class="page-actions">
                                 <div>
-                                <p class="summary-text">
-                                                현재 등록된 총 건수: <strong><%= enrollments.size() %>건</strong>
+                                        <p class="summary-text">
+                                                현재 등록된 강의 수: <strong><%= enrollments.size() %>과목</strong>
                                         </p>
                                 </div>
                                 <div class="action-buttons">
@@ -56,7 +56,6 @@
                         <table class="data-table">
                                 <thead>
                                         <tr>
-                                                <th>학생 ID</th>
                                                 <th>분반 ID</th>
                                                 <th>강의코드</th>
                                                 <th>분반</th>
@@ -71,12 +70,11 @@
                                 <tbody>
                                         <% if (enrollments.isEmpty()) { %>
                                         <tr>
-                                                <td colspan="10" style="text-align: center;">등록된 강의가 없습니다.</td>
+                                                <td colspan="9" style="text-align: center;">등록된 강의가 없습니다.</td>
                                         </tr>
                                         <% } else { %>
                                         <% for (EnrollmentDetail enrollment : enrollments) { %>
                                         <tr>
-                                                <td><%= enrollment.getStudentId() %></td>
                                                 <td><%= enrollment.getSectionId() %></td>
                                                 <td><%= enrollment.getCourseId() %></td>
                                                 <td><%= enrollment.getSectionNumber() %>분반</td>
