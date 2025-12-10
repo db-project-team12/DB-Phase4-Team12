@@ -36,20 +36,9 @@ public class EnrollmentListServlet extends HttpServlet {
                         return;
                 }
 
-                String successMessage = (String) session.getAttribute("successMessage");
-                if (successMessage != null) {
-                        request.setAttribute("successMessage", successMessage);
-                        session.removeAttribute("successMessage");
-                }
-
-                String errorMessage = (String) session.getAttribute("errorMessage");
-                if (errorMessage != null) {
-                        request.setAttribute("errorMessage", errorMessage);
-                        session.removeAttribute("errorMessage");
-                }
+                int studentId = (Integer) session.getAttribute("studentId");
 
                 try {
-                        int studentId = (Integer) session.getAttribute("studentId");
                         List<EnrollmentDetail> enrollments = enrollmentDAO.getMyEnrollment(studentId);
                         request.setAttribute("enrollments", enrollments);
                 } catch (SQLException e) {
